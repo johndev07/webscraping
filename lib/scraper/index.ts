@@ -1,6 +1,6 @@
 import axios from "axios";
 import * as cheerio from "cheerio";
-import { extractCurrency, extractPrice } from "../utils";
+import { extractCurrency, extractPrice, extractDescription } from "../utils";
 export async function scrapeAmazonProduct(url: string) {
   if (!url) return;
   // curl --proxy brd.superproxy.io:22225 --proxy-user brd-customer-hl_88197553-zone-pricewise:mfpz0s4qsj3e -k https://lumtest.com/myip.json
@@ -50,6 +50,9 @@ export async function scrapeAmazonProduct(url: string) {
     const currency = extractCurrency($(".a-price-symbol"));
 
     const discountRate = $(".savingsPercentage").text().replace(/[-%]/g, "");
+
+    const description = extractDescription($);
+
     const data = {
       url,
       currency: currency || "$",
@@ -63,6 +66,7 @@ export async function scrapeAmazonProduct(url: string) {
       reviewsCount: 100,
       stars: 4.5,
       isOutOfStock: outOfStock,
+      description,
       lowestPrice: Number(currentPrice) || Number(originalPrice),
       highestPrice: Number(originalPrice) || Number(currentPrice),
       averagePrice: Number(currentPrice) || Number(originalPrice),
@@ -77,6 +81,8 @@ export async function scrapeAmazonProduct(url: string) {
       originalPrice,
       currency,
     });
+
+    return data;
   } catch (error: any) {
     throw new Error(`failed to scrape product: ${error.message}`);
   }

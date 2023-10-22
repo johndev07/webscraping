@@ -15,7 +15,7 @@ const Navbar = () => {
         <Link href="/" className="flex items-center gap-1">
           <Image
             alt="logo"
-            src="./assets/icons/logo.svg"
+            src="/assets/icons/logo.svg"
             width={27}
             height={27}
           />
